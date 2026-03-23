@@ -1,4 +1,6 @@
 # Personal Finance Tracker
+import csv
+
 
 class Transaction:
     def __init__(self, date, description, amount, category):
@@ -7,6 +9,7 @@ class Transaction:
         self.amount = amount
         self.category = category
 
+
 class FinanceTracker:
     def __init__(self):
         self.transactions = []
@@ -14,6 +17,11 @@ class FinanceTracker:
     def add_transaction(self, date, description, amount, category):
         transaction = Transaction(date, description, amount, category)
         self.transactions.append(transaction)
+
+        # Save to CSV file
+        with open("transactions.csv", "a", newline="") as file:
+            writer = csv.writer(file)
+            writer.writerow([date, description, amount, category])
 
     def view_transactions(self):
         for transaction in self.transactions:
@@ -34,11 +42,12 @@ class FinanceTracker:
                 expenses[transaction.category] = transaction.amount
         return expenses
 
+
 def main():
     tracker = FinanceTracker()
 
     while True:
-        print("1. Add Transaction")
+        print("\n1. Add Transaction")
         print("2. View Transactions")
         print("3. Get Balance")
         print("4. Get Expenses by Category")
@@ -52,18 +61,25 @@ def main():
             amount = float(input("Enter amount: "))
             category = input("Enter category: ")
             tracker.add_transaction(date, description, amount, category)
+
         elif choice == "2":
             tracker.view_transactions()
+
         elif choice == "3":
             print(f"Balance: {tracker.get_balance()}")
+
         elif choice == "4":
             expenses = tracker.get_expenses_by_category()
             for category, amount in expenses.items():
                 print(f"Category: {category}, Amount: {amount}")
+
         elif choice == "5":
+            print("Exiting...")
             break
+
         else:
             print("Invalid choice. Please try again.")
+
 
 if __name__ == "__main__":
     main()
